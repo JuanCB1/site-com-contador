@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visão - Dispensador de Alimentos</title>
+    <link rel="stylesheet" href="css/vc.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
+</head>
+
+<body>
+    <div class="Lado">
+        <aside>
+            <div class="logo">MOV</div>
+            <nav>
+                <ul>
+                    <li><a href="tempo.html">Tempo</a></li>
+                    <li><a href="armazenamento.html">Armazenamento</a></li>
+                    <li><a href="visao.html">Visão</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main>
+            <header>
+                <h1>Visão</h1>
+            </header>
+            <section>
+                <h2>Monitoramento de Visão</h2>
+                <p>Aqui você pode monitorar a visão da área de alimentação.</p>
+            </section>
+            <section class="videoc">
+                <h1>Detector/Contador de Ovelhas</h1>
+                <div class="videol" >
+                    <video id="videoElement" autoplay></video>
+                    <canvas id="canvas"></canvas>
+                </div>
+                <p>Ovelhas detectadas: <span id="peopleCount">0</span></p>
+                <p>Ovelhas que foram comer: <span id="savedPeopleCount">0</span></p>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="js/visao.js"></script>
+</body>

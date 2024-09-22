@@ -1,0 +1,372 @@
+:root {
+  --Rosa-claro: #ebb7ce;
+  --Marrom-rosado: #b38471;
+  --Verde-oliva: #5c5e36;
+  --Verde-escuro: #1d3d33;
+  --Branco: #ffffff;
+  --Preto-azulado: #0c181c;
+  --Cinza-claro: #f5f5f5;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--Branco);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  height: 100vh;
+  color: var(--Preto-azulado);
+}
+
+.Lado {
+  display: flex;
+  width: 100%;
+}
+
+aside {
+  width: 250px;
+  background-color: var(--Verde-escuro);
+  color: var(--Marrom-rosado);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  position: fixed;
+}
+
+.logo {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: var(--Marrom-rosado);
+  font-weight: bold;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+nav ul li {
+  margin-bottom: 20px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: var(--Verde-escuro);
+  background-color: var(--Marrom-rosado);
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+nav ul li a:hover {
+  background-color: var(--Marrom-rosado);
+  color: var(--Branco);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+main {
+  flex: 1;
+  padding: 30px;
+  background-color: var(--Cinza-claro);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
+  margin-left: 289px;
+  height: 113%;
+}
+
+header {
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 36px;
+  color: var(--Verde-escuro);
+  font-weight: bold;
+}
+
+section {
+  background-color: var(--Branco);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 25px;
+}
+
+h1,
+h2 {
+  color: var(--Verde-escuro);
+  margin-bottom: 15px;
+}
+
+form button,
+#edit-button,
+#cancel-button {
+  background-color: var(--Marrom-rosado);
+  color: var(--Branco);
+  padding: 12px 25px;
+  border: 2px solid var(--Marrom-rosado);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  font-weight: bold;
+}
+
+form button:hover,
+#edit-button:hover,
+#cancel-button:hover {
+  background-color: var(--Marrom-rosado);
+  transform: translateY(-2px);
+  /* Pequeno efeito de elevação */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.time-input-group {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.time-input {
+  margin-right: 15px;
+}
+
+.time-input label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--Verde-escuro);
+  font-weight: bold;
+}
+
+.sensor-data {
+  background-color: var(--Verde-escuro);
+  padding: 25px;
+  border-radius: 10px;
+  color: var(--Rosa-claro);
+  margin-bottom: 25px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
+
+#sensor-info p {
+  font-size: 1.2em;
+}
+
+.Gráfico {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+canvas {
+  width: 100% !important;
+  max-width: 700px;
+  height: 300px !important;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#live-feed {
+  text-align: center;
+}
+
+#live-feed img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+html {
+  --body-color: #FFFCFF;
+  --header-color: #d36c6c;
+  --header-button: #92a1d1;
+  --color-weekdays: #247BA0;
+  --box-shadow: #CBD4C2;
+  --hover: #e8faed;
+  --dia-atual: #e8f4fa;
+  --event-color: #58bae4;
+  --modal-event: #e8f4fa;
+  --color-day: white;
+}
+
+
+.container-calender {
+  height: 100%;
+  width: 64%;
+}
+
+.calender-button {
+  width: 75px;
+  cursor: pointer;
+  box-shadow: 0px 0px 2px gray;
+  border: none;
+  outline: none;
+  padding: 5px;
+  border-radius: 5px;
+  color: white;
+}
+
+#header {
+  padding: 10px;
+  color: var(--header-color);
+  font-size: 26px;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: space-between;
+}
+
+#header button {
+  background-color: var(--header-button);
+}
+
+#container {
+  width: 100%;
+}
+
+#weekdays {
+  width: 100%;
+  display: flex;
+  color: var(--color-weekdays);
+  justify-content: center;
+  margin-left: -10px;
+}
+
+#weekdays div {
+  width: 100px;
+  padding: 10px;
+}
+
+#calendar {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day {
+  width: calc(100% / 8);
+  padding: 10px;
+  height: 70px;
+  ;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: var(--color-day);
+  margin: 5px;
+  box-shadow: 0px 0px 3px var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 15%;
+}
+
+.day:hover {
+  background-color: var(--hover);
+}
+
+.day+#currentDay {
+  background-color: var(--dia-atual);
+}
+
+.event {
+  font-size: 10px;
+  padding: 3px;
+  background-color: var(--event-color);
+  color: white;
+  border-radius: 5px;
+  max-height: 55px;
+  overflow: hidden;
+}
+
+.padding {
+  cursor: default !important;
+  background-color: var(--body-color) !important;
+  box-shadow: none !important;
+}
+
+#newEventModal,
+#deleteEventModal {
+  display: none;
+  z-index: 20;
+  padding: 25px;
+  background-color: var(--modal-event);
+  box-shadow: 0px 0px 3px black;
+  border-radius: 5px;
+  width: 350px;
+  top: 100px;
+  left: calc(50% - 175px);
+  position: absolute;
+  font-family: sans-serif;
+}
+
+#eventTitleInput {
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 25px;
+  border-radius: 3px;
+  outline: none;
+  border: none;
+  box-shadow: 0px 0px 3px gray;
+}
+
+#eventTitleInput.error {
+  border: 2px solid red;
+}
+
+#cancelButton,
+#deleteButton {
+  background-color: var(--header-color);
+}
+
+#saveButton,
+#closeButton {
+  background-color: var(--header-button);
+}
+
+#eventText {
+  font-size: 14px;
+}
+
+#modalBackDrop {
+  display: none;
+  top: 0px;
+  left: 0px;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.width-30 {
+  width: 30%;
+  height: 30%;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.s-calender {
+  background-color: var(--Branco);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 25px;
+}
+
+.cada {
+  background-color: var(--Cinza-claro);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: none
+}
