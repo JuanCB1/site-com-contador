@@ -2,12 +2,9 @@ const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt')
 
 client.subscribe("DHT_DATA:HUMI");
 client.subscribe("DHT_DATA:LEVEL");
+client.subscribe("ESP_DATA");
 
 const decoder = new TextDecoder('utf-8');
-
-let levelReady = false;
-let humiReady = false;
-
 
 // Função para obter uma variável CSS
 function getCssVariable(variable) {
@@ -50,7 +47,8 @@ function separateInfoQuery(query) {
     var words = query.split('/');
     var time = words[1].split(':')
 
-    if (words.length >= 3) {
+
+    if (words.length >= 2 && time.length >= 3) {
         var result = {
             value: parseFloat(words[0]),
             datetime: {
@@ -68,7 +66,7 @@ function separateInfoQuery(query) {
 
 function buildDate(datetime) {
     const now = new Date()
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), datetime.minute, datetime.second);
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), datetime.hour, datetime.minute, datetime.second);
 }
 
 // Função para atualizar as informações dos sensores
@@ -93,7 +91,7 @@ function ReconstructLevel(data) {
 
     for (let index = 1 /* <= On purpose */; index < keys.length; index++) {
         const element = keys[index];
-
+        console.log(element)
         getLevel(separateInfoQuery(element));
     }
 }
@@ -103,39 +101,42 @@ function ReconstructHumi(data) {
 
     for (let index = 1 /* <= On purpose */; index < keys.length; index++) {
         const element = keys[index];
-
+        console.log(element)
         getHumidity(separateInfoQuery(element));
     }
 }
 
+let levelReady = false;
+let humiReady = false;
+
 const Handler = function (topic, message) {
     var msgstr = decoder.decode(message);
 
+    console.log("PORRA")
+    console.log(msgstr)
+
     if (topic == 'ESP_DATA' && msgstr.startsWith("ACK_LVL")) {
+        console.log("TESTE1")
         ReconstructLevel(msgstr)
         levelReady = true;
     }
     else if (topic == 'ESP_DATA' && msgstr.startsWith("ACK_HUMI")) {
+        console.log("TESTE2")
         ReconstructHumi(msgstr);
         humiReady = true;
     }
 
-    if (!(levelReady && humiReady)) {
+    if (levelReady && humiReady) {
         client.off('message', Handler);
     }
 }
 
-// Initializes the graph
-function RetrieveGraphInfo() {
-    client.publish("ESP_COMMAND", "GETGRAPHINFO");
-    client.on("message", Handler);
-}
 
 
 // Listener for regular updates for the graph
 client.on("message", function (topic, message) {
     var msgstr = decoder.decode(message)
-    console.log(msgstr);
+    //console.log(msgstr);
 
     if (topic === "DHT_DATA:HUMI") {
         getHumidity(separateInfoQuery(msgstr));
@@ -274,4 +275,5 @@ function removeOldData(chart) {
     }
 }
 
-RetrieveGraphInfo();
+client.publish("ESP_COMMAND", "GETGRAPHINFO");
+client.on("message", Handler);
