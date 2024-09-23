@@ -112,7 +112,6 @@ let humiReady = false;
 const Handler = function (topic, message) {
     var msgstr = decoder.decode(message);
 
-    console.log("PORRA")
     console.log(msgstr)
 
     if (topic == 'ESP_DATA' && msgstr.startsWith("ACK_LVL")) {
@@ -125,12 +124,10 @@ const Handler = function (topic, message) {
         ReconstructHumi(msgstr);
         humiReady = true;
     }
-
-    if (levelReady && humiReady) {
+    if ((levelReady && humiReady) || (topic == 'ESP_DATA' && msgstr == "ESP_STARTUP")) {
         client.off('message', Handler);
     }
 }
-
 
 
 // Listener for regular updates for the graph
@@ -145,6 +142,7 @@ client.on("message", function (topic, message) {
         getLevel(separateInfoQuery(msgstr));
     }
 })
+
 
 // Configuração do gráfico de Nível de Alimento
 const ctxLevel = document.getElementById("Gráficonível").getContext("2d");
