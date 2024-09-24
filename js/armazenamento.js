@@ -35,12 +35,12 @@ Chart.defaults.color = "#343a40";
 Chart.defaults.font.size = 14;
 
 // Função para adicionar dados ao gráfico
-function addData(chart, label, data) {
+function addData(chart, label, data, update) {
     chart.data.labels.push(label);
     chart.data.datasets.forEach((dataset) => {
         dataset.data.push(data);
     });
-    chart.update();
+    if (update) chart.update();
 }
 
 function separateInfoQuery(query) {
@@ -70,60 +70,62 @@ function buildDate(datetime) {
 }
 
 // Função para atualizar as informações dos sensores
-function getHumidity(info) {
+function getHumidity(info, updt = true) {
     document.getElementById("sensor-umidade").innerText = info.value + "%";
 
-    addData(Gráficoumidade, buildDate(info.datetime), info.value);
+    addData(Gráficoumidade, buildDate(info.datetime), info.value, updt);
 
     removeOldData(Gráficoumidade);
 }
 
-function getLevel(info) {
+function getLevel(info, updt = true) {
     document.getElementById("sensor-nível").innerText = info.value + "%";
 
-    addData(Gráficonível, buildDate(info.datetime), info.value);
+    addData(Gráficonível, buildDate(info.datetime), info.value, updt);
 
     removeOldData(Gráficonível);
 }
 
-function ReconstructLevel(data) {
-    var keys = data.split(' ');
-
-    for (let index = 1 /* <= On purpose */; index < keys.length; index++) {
-        const element = keys[index];
-        console.log(element)
-        getLevel(separateInfoQuery(element));
-    }
-}
-
-function ReconstructHumi(data) {
-    var keys = data.split(' ');
-
-    for (let index = 1 /* <= On purpose */; index < keys.length; index++) {
-        const element = keys[index];
-        console.log(element)
-        getHumidity(separateInfoQuery(element));
-    }
-}
-
 let levelReady = false;
 let humiReady = false;
+
+function ReconstructGraph(data) {
+    var keys = data.split(' ');
+    const target = keys[0];
+
+    if (target != "ACK_HUMI" && target != "ACK_LVL") throw Error();
+
+    var updt;
+    var thisGraph;
+
+    if (target == "ACK_HUMI") {
+        updt = getHumidity;
+        humiReady = true;
+        thisGraph = Gráficoumidade;
+    } else {
+        updt = getLevel;
+        levelReady = true;
+        thisGraph = Gráficonível;
+    }
+
+    keys.slice(1).forEach(element => {
+        console.log(element)
+        updt(separateInfoQuery(element), false);
+    })
+    
+    thisGraph.update();
+}
 
 const Handler = function (topic, message) {
     var msgstr = decoder.decode(message);
 
     console.log(msgstr)
 
-    if (topic == 'ESP_DATA' && msgstr.startsWith("ACK_LVL")) {
+    if (topic == 'ESP_DATA' && (msgstr.startsWith("ACK_LVL") || msgstr.startsWith("ACK_HUMI"))) {
         console.log("TESTE1")
-        ReconstructLevel(msgstr)
-        levelReady = true;
+        ReconstructGraph(msgstr)
     }
-    else if (topic == 'ESP_DATA' && msgstr.startsWith("ACK_HUMI")) {
-        console.log("TESTE2")
-        ReconstructHumi(msgstr);
-        humiReady = true;
-    }
+
     if ((levelReady && humiReady) || (topic == 'ESP_DATA' && msgstr == "ESP_STARTUP")) {
         client.off('message', Handler);
     }
