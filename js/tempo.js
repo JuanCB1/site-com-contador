@@ -20,29 +20,46 @@ console.log(branco);
 console.log(pretoazulado);
 console.log(cinzaclaro);
 
-document.getElementById('schedule-form').addEventListener('submit', function (event) {
+// Função para salvar horários
+document.getElementById('schedule-time-form').addEventListener('submit', function (event) {
     event.preventDefault();
     const morningTime = document.getElementById('morning-time').value;
     const afternoonTime = document.getElementById('afternoon-time').value;
     const eveningTime = document.getElementById('evening-time').value;
+    
     alert(`Horários de alimentação salvos:\nManhã: ${morningTime}\nTarde: ${afternoonTime}\nNoite: ${eveningTime}`);
 
-    document.getElementById('schedule-form').style.display = 'none';
-    document.getElementById('edit-button').style.display = 'block';
-    document.getElementById('cancel-button').style.display = 'block';
+    // Mostrar botão de editar e ocultar o formulário
+    document.getElementById('schedule-time-form').style.display = 'none';
+    document.getElementById('edit-time-button').style.display = 'block';
 });
 
-document.getElementById('edit-button').addEventListener('click', function () {
-    document.getElementById('schedule-form').style.display = 'block';
-    document.getElementById('edit-button').style.display = 'none';
-    document.getElementById('cancel-button').style.display = 'none';
+// Função para editar horários
+document.getElementById('edit-time-button').addEventListener('click', function () {
+    document.getElementById('schedule-time-form').style.display = 'block';
+    document.getElementById('edit-time-button').style.display = 'none';
 });
 
-document.getElementById('cancel-button').addEventListener('click', function () {
-    document.getElementById('schedule-form').style.display = 'none';
-    document.getElementById('edit-button').style.display = 'block';
-    document.getElementById('cancel-button').style.display = 'none';
+// Função para salvar ração
+document.getElementById('schedule-ration-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const morningRation = document.getElementById('morning-ration').value;
+    const afternoonRation = document.getElementById('afternoon-ration').value;
+    const eveningRation = document.getElementById('evening-ration').value;
+
+    alert(`Quantidades de ração salvas:\nManhã: ${morningRation}g\nTarde: ${afternoonRation}g\nNoite: ${eveningRation}g`);
+
+    // Mostrar botão de editar e ocultar o formulário
+    document.getElementById('schedule-ration-form').style.display = 'none';
+    document.getElementById('edit-ration-button').style.display = 'block';
 });
+
+// Função para editar ração
+document.getElementById('edit-ration-button').addEventListener('click', function () {
+    document.getElementById('schedule-ration-form').style.display = 'block';
+    document.getElementById('edit-ration-button').style.display = 'none';
+});
+
 
 // variaveis globais
 

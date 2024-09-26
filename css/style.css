@@ -105,8 +105,7 @@ h2 {
 }
 
 form button,
-#edit-button,
-#cancel-button {
+#edit-time-button{
   background-color: var(--Marrom-rosado);
   color: var(--Branco);
   padding: 12px 25px;
@@ -118,8 +117,27 @@ form button,
 }
 
 form button:hover,
-#edit-button:hover,
-#cancel-button:hover {
+#edit-time-button:hover {
+  background-color: var(--Marrom-rosado);
+  transform: translateY(-2px);
+  /* Pequeno efeito de elevação */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+form button,
+#edit-ration-button{
+  background-color: var(--Marrom-rosado);
+  color: var(--Branco);
+  padding: 12px 25px;
+  border: 2px solid var(--Marrom-rosado);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  font-weight: bold;
+}
+
+form button:hover,
+#edit-ration-button:hover {
   background-color: var(--Marrom-rosado);
   transform: translateY(-2px);
   /* Pequeno efeito de elevação */
@@ -140,6 +158,14 @@ form button:hover,
   margin-bottom: 8px;
   color: var(--Verde-escuro);
   font-weight: bold;
+}
+
+.ration-input-group {
+  margin-top: 20px;
+}
+
+.ration-input {
+  margin-bottom: 10px;
 }
 
 .sensor-data {
@@ -345,15 +371,20 @@ html {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.width-30 {
-  width: 30%;
-  height: 30%;
+.horário, .ração {
+  margin-bottom: 20px;
+  width: 100%; 
 }
 
 .container {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
+  align-items: flex-start; 
+}
+
+.container-left {
+  display: flex;
+  flex-direction: column;
 }
 
 .s-calender {

@@ -4,7 +4,6 @@ const savedPeopleCountElement = document.getElementById('savedPeopleCount');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-let savedCount = 0;
 let peopleCrossed = 0;
 
 // Carregar o número de pessoas salvas no Local Storage ao carregar a página
@@ -29,8 +28,16 @@ function startVideoStream() {
 }
 
 // Função para verificar se a pessoa cruzou a linha
-function hasCrossedLine(x, previousX, lineX) {
-    return previousX < lineX && x >= lineX;  // Verifica cruzamento da esquerda para a direita
+function hasCrossedLine(currentX, previousX, lineX, hasCrossedRight) {
+    if (!hasCrossedRight && previousX < lineX && currentX >= lineX) {
+        return true;  // Cruzamento da esquerda para a direita
+    }
+    return false;
+}
+
+// Função para verificar se a pessoa voltou para o lado esquerdo da linha
+function isBackToLeft(currentX, lineX) {
+    return currentX < lineX;
 }
 
 // Carregar o modelo COCO-SSD e iniciar a detecção
@@ -39,6 +46,7 @@ async function detectPeople() {
     console.log("Modelo COCO-SSD carregado");
 
     let previousPositions = [];
+    let hasCrossedRight = [];  // Status para cada pessoa: true se ela já cruzou para o lado direito
 
     setInterval(async () => {
         const predictions = await model.detect(videoElement);
@@ -70,13 +78,26 @@ async function detectPeople() {
                 // Calcular a posição do centro da pessoa no eixo X
                 const centerX = x + width / 2;
 
+                // Inicializar status de cruzamento se for um novo índice
+                if (typeof hasCrossedRight[index] === 'undefined') {
+                    hasCrossedRight[index] = false;
+                }
+
                 // Verificar se a pessoa cruzou a linha vertical
                 const previousX = previousPositions[index] || 0;
-                if (hasCrossedLine(centerX, previousX, lineX)) {
+                if (hasCrossedLine(centerX, previousX, lineX, hasCrossedRight[index])) {
                     // Incrementar o contador de pessoas que cruzaram a linha
                     peopleCrossed++;
                     localStorage.setItem('people_crossed_count', peopleCrossed);
                     savedPeopleCountElement.innerText = peopleCrossed;
+
+                    // Marcar que essa pessoa já cruzou a linha
+                    hasCrossedRight[index] = true;
+                }
+
+                // Verificar se a pessoa voltou para o lado esquerdo da linha
+                if (isBackToLeft(centerX, lineX)) {
+                    hasCrossedRight[index] = false;
                 }
 
                 // Atualizar a posição anterior da pessoa
