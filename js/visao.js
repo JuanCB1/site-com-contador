@@ -108,7 +108,7 @@ async function detectPeople() {
         // Atualizar a contagem de pessoas detectadas
         peopleCountElement.innerText = peopleCount;
 
-    }, 1000);  // Faz a detecção a cada 1 segundo
+    }, 200);  // Faz a detecção a cada 1 segundo
 }
 
 // Iniciar a captura de vídeo e a detecção de pessoas
