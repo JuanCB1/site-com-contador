@@ -29,7 +29,6 @@ console.log(pretoazulado);
 console.log(cinzaclaro);
 
 // Configurações globais do Chart.js
-// Configurações globais do Chart.js
 Chart.defaults.font.family = "'Roboto', sans-serif";
 Chart.defaults.color = "#343a40";
 Chart.defaults.font.size = 14;

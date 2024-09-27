@@ -1,6 +1,3 @@
-const { Client } = require("mqtt");
-const { default: handle } = require("mqtt/lib/handlers/index");
-
 const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
 
 client.subscribe("ESP_DATA")
@@ -12,9 +9,9 @@ function getCssVariable(variable) {
 
 let time = 0;
 let ration = 0;
-document.getElementById('morning-time').value = "00:02";
-document.getElementById('afternoon-time').value = "00:03";
-document.getElementById('evening-time').value = "00:04";
+//document.getElementById('morning-time').value = "00:02";
+//document.getElementById('afternoon-time').value = "00:03";
+//document.getElementById('evening-time').value = "17:00";
 
 //cores definidas no CSS
 const rosaclaro = getCssVariable('--Rosa-claro');
@@ -60,18 +57,32 @@ function decodeID(id) {
     };
 }
 
+function FormatHour(input)
+{
+    const hour = input.hours.toString().padStart(2, '0');
+    const minute = input.minutes.toString().padStart(2, '0');
+
+    return `${hour}:${minute}`
+}
+
 // Initial Setup
-//hideinfo('time');
-//hideinfo('ration');
+hideinfo('time');
+hideinfo('ration');
+
+function YouWillInFactHandle(msg) {
+    var words = msg.split(' ').slice(1);
+
+    
+}
 
 const Handler = function (topic, msg) {
-    var msgstr = decoder.decode(message);
+    var msgstr = decoder.decode(msg);
 
     console.log(msgstr)
 
     if (topic == 'ESP_DATA' && msgstr.startsWith("ACK_TM")) {
-        console.log("TESTE1")
-        ReconstructGraph(msgstr)
+        console.log("TESTE534543")
+        YouWillInFactHandle(msgstr);
     }
 }
 
