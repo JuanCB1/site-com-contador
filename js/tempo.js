@@ -1,7 +1,20 @@
+const { Client } = require("mqtt");
+const { default: handle } = require("mqtt/lib/handlers/index");
+
+const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
+
+client.subscribe("ESP_DATA")
+
 // Função para obter uma variável CSS
 function getCssVariable(variable) {
     return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
 }
+
+let time = 0;
+let ration = 0;
+document.getElementById('morning-time').value = "00:02";
+document.getElementById('afternoon-time').value = "00:03";
+document.getElementById('evening-time').value = "00:04";
 
 //cores definidas no CSS
 const rosaclaro = getCssVariable('--Rosa-claro');
@@ -20,24 +33,72 @@ console.log(branco);
 console.log(pretoazulado);
 console.log(cinzaclaro);
 
+function hideinfo(btn) {
+    document.getElementById(`schedule-${btn}-form`).style.display = 'none';
+    document.getElementById(`edit-${btn}-button`).style.display = 'none';
+}
+
+function showinfosch(btn) {
+    document.getElementById(`schedule-${btn}-form`).style.display = 'block';
+    document.getElementById(`edit-${btn}-button`).style.display = 'none';
+}
+
+function showinfoedit(btn) {
+    document.getElementById(`schedule-${btn}-form`).style.display = 'none';
+    document.getElementById(`edit-${btn}-button`).style.display = 'block';
+}
+
+function decodeID(id) {
+    const hours = (id >> 23) & 0x1F;       // Extrai as horas
+    const minutes = (id >> 17) & 0x3F;     // Extrai os minutos
+    const extra = id & 0x1FFFF;            // Extrai o valor extra
+
+    return {
+        hours: hours,
+        minutes: minutes,
+        extra: extra
+    };
+}
+
+// Initial Setup
+//hideinfo('time');
+//hideinfo('ration');
+
+const Handler = function (topic, msg) {
+    var msgstr = decoder.decode(message);
+
+    console.log(msgstr)
+
+    if (topic == 'ESP_DATA' && msgstr.startsWith("ACK_TM")) {
+        console.log("TESTE1")
+        ReconstructGraph(msgstr)
+    }
+}
+
+function request() {
+    client.on("message", Handler);
+    client.publish("ESP_COMMAND", "RETURNSCH");
+}
+
+
 // Função para salvar horários
 document.getElementById('schedule-time-form').addEventListener('submit', function (event) {
     event.preventDefault();
     const morningTime = document.getElementById('morning-time').value;
     const afternoonTime = document.getElementById('afternoon-time').value;
     const eveningTime = document.getElementById('evening-time').value;
-    
+
     alert(`Horários de alimentação salvos:\nManhã: ${morningTime}\nTarde: ${afternoonTime}\nNoite: ${eveningTime}`);
 
     // Mostrar botão de editar e ocultar o formulário
-    document.getElementById('schedule-time-form').style.display = 'none';
-    document.getElementById('edit-time-button').style.display = 'block';
+    showinfoedit('time')
+
+    jgesjgo((morningTime, afternoonTime, eveningTime));
 });
 
 // Função para editar horários
 document.getElementById('edit-time-button').addEventListener('click', function () {
-    document.getElementById('schedule-time-form').style.display = 'block';
-    document.getElementById('edit-time-button').style.display = 'none';
+    showinfosch('time')
 });
 
 // Função para salvar ração
@@ -50,14 +111,12 @@ document.getElementById('schedule-ration-form').addEventListener('submit', funct
     alert(`Quantidades de ração salvas:\nManhã: ${morningRation}g\nTarde: ${afternoonRation}g\nNoite: ${eveningRation}g`);
 
     // Mostrar botão de editar e ocultar o formulário
-    document.getElementById('schedule-ration-form').style.display = 'none';
-    document.getElementById('edit-ration-button').style.display = 'block';
+    showinfoedit('ration')
 });
 
 // Função para editar ração
 document.getElementById('edit-ration-button').addEventListener('click', function () {
-    document.getElementById('schedule-ration-form').style.display = 'block';
-    document.getElementById('edit-ration-button').style.display = 'none';
+    showinfosch('ration')
 });
 
 
@@ -226,3 +285,5 @@ function buttons() {
 }
 buttons()
 load()
+
+request();
