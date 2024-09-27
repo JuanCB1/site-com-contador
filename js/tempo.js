@@ -1,4 +1,7 @@
+const { get } = require("express/lib/response");
+
 const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
+const decoder = new TextDecoder('utf-8');
 
 client.subscribe("ESP_DATA")
 
@@ -9,9 +12,9 @@ function getCssVariable(variable) {
 
 let time = 0;
 let ration = 0;
-//document.getElementById('morning-time').value = "00:02";
-//document.getElementById('afternoon-time').value = "00:03";
-//document.getElementById('evening-time').value = "17:00";
+
+let timeset = false;
+let rationset = false;
 
 //cores definidas no CSS
 const rosaclaro = getCssVariable('--Rosa-claro');
@@ -57,8 +60,7 @@ function decodeID(id) {
     };
 }
 
-function FormatHour(input)
-{
+function FormatHour(input) {
     const hour = input.hours.toString().padStart(2, '0');
     const minute = input.minutes.toString().padStart(2, '0');
 
@@ -69,10 +71,28 @@ function FormatHour(input)
 hideinfo('time');
 hideinfo('ration');
 
-function YouWillInFactHandle(msg) {
+function Setup(msg) {
     var words = msg.split(' ').slice(1);
+    var Times = [];
 
-    
+    words.forEach(element => {
+        console.log(element);
+        Times.push(decodeID(element))
+    });
+
+    document.getElementById('morning-time').value = FormatHour(Times[0]);
+    document.getElementById('afternoon-time').value = FormatHour(Times[1]);
+    document.getElementById('evening-time').value = FormatHour(Times[2]);
+
+    document.getElementById('morning-ration').value = Times[0].extra;
+    document.getElementById('afternoon-ration').value = Times[1].extra;
+    document.getElementById('evening-ration').value = Times[2].extra;
+
+    rationset = true;
+    timeset = true;
+
+    showinfoedit('time');
+    showinfoedit('ration');
 }
 
 const Handler = function (topic, msg) {
@@ -82,7 +102,13 @@ const Handler = function (topic, msg) {
 
     if (topic == 'ESP_DATA' && msgstr.startsWith("ACK_TM")) {
         console.log("TESTE534543")
-        YouWillInFactHandle(msgstr);
+        Setup(msgstr);
+        client.off("message", Handler)
+    }
+    else if (topic == 'ESP_DATA' && msgstr == "ESP_STARTUP") {
+        client.off("message", Handler)
+        showinfosch('time');
+        showinfosch('ration');
     }
 }
 
@@ -91,6 +117,18 @@ function request() {
     client.publish("ESP_COMMAND", "RETURNSCH");
 }
 
+/*function getEvents()
+{
+
+}*/
+
+function sendEvents()
+{
+    if (rationset && timeset)
+    {
+
+    }
+}
 
 // Função para salvar horários
 document.getElementById('schedule-time-form').addEventListener('submit', function (event) {
@@ -104,7 +142,7 @@ document.getElementById('schedule-time-form').addEventListener('submit', functio
     // Mostrar botão de editar e ocultar o formulário
     showinfoedit('time')
 
-    jgesjgo((morningTime, afternoonTime, eveningTime));
+    timeset = true
 });
 
 // Função para editar horários
@@ -123,6 +161,8 @@ document.getElementById('schedule-ration-form').addEventListener('submit', funct
 
     // Mostrar botão de editar e ocultar o formulário
     showinfoedit('ration')
+
+    timeset = true
 });
 
 // Função para editar ração
