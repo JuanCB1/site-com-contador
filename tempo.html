@@ -28,32 +28,62 @@
             </header>
             <section>
                 <h2>Configuração do Tempo</h2>
-                <p>Aqui, você pode para e contemplar a vida...</p>
+                <p>Aqui você pode definir os períodos de alimentação e colocar alguns lembretes de acordo com sua
+                    preferência.</p>
             </section>
             <div class="container">
-                <section class="width-30">
-                    <h2>Configurar Horários de Alimentação</h2>
-                    <form id="schedule-form">
-                        <div class="time-input-group">
-                            <div class="time-input">
-                                <label for="morning-time">Afdssdd:</label>
-                                <input type="time" id="morning-time" name="morning-time" required>
-                            </div>
-                            <div class="time-input">
-                                <label for="afternoon-time">Tarde:</label>
-                                <input type="time" id="afternoon-time" name="afternoon-time" required>
-                            </div>
-                            <div class="time-input">
-                                <label for="evening-time">Noite:</label>
-                                <input type="time" id="evening-time" name="evening-time" required>
-                            </div>
-                        </div>
-                        <button type="submit">Salvar</button>
-                        <button type="button" id="cancel-button" style="display: none;">Cancelar</button>
-                    </form>
-                    <button id="edit-button" style="display: none;">Editar Horários</button>
-                </section>
+                <div class="container-left">
+                    <section class="horário">
+                        <h2>Configurar Horários de Alimentação</h2>
 
+                        <!--Configuração do horário -->
+                        <form id="schedule-time-form">
+                            <div class="time-input-group">
+                                <div class="time-input">
+                                    <label for="morning-time">Manhã:</label>
+                                    <input type="time" id="morning-time" name="morning-time" required>
+                                </div>
+                                <div class="time-input">
+                                    <label for="afternoon-time">Tarde:</label>
+                                    <input type="time" id="afternoon-time" name="afternoon-time" required>
+                                </div>
+                                <div class="time-input">
+                                    <label for="evening-time">Noite:</label>
+                                    <input type="time" id="evening-time" name="evening-time" required>
+                                </div>
+                            </div>
+                            <button type="submit" id="save-time-button">Salvar Horários</button>
+                        </form>
+                        <button type="button" id="edit-time-button" style="display: none;">Editar Horários</button>
+                    </section>
+
+                    <section class="ração">
+                        <h2>Configurar Quantidade de Ração</h2>
+                        <form id="schedule-ration-form">
+                            <!-- Quantidade de ração -->
+                            <div class="ration-input-group">
+                                <div class="ration-input">
+                                    <label for="morning-ration">Quantidade de ração (Manhã):</label>
+                                    <input type="number" id="morning-ration" name="morning-ration" min="1" max="500"
+                                        required>
+                                </div>
+                                <div class="ration-input">
+                                    <label for="afternoon-ration">Quantidade de ração (Tarde):</label>
+                                    <input type="number" id="afternoon-ration" name="afternoon-ration" min="1" max="500"
+                                        required>
+                                </div>
+                                <div class="ration-input">
+                                    <label for="evening-ration">Quantidade de ração (Noite):</label>
+                                    <input type="number" id="evening-ration" name="evening-ration" min="1" max="500"
+                                        required>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="save-ration-button">Salvar Ração</button>
+                        </form>
+                        <button type="button" id="edit-ration-button" style="display: none;">Editar Ração</button>
+                    </section>
+                </div>
                 <div class="container-calender">
                     <section class="s-calender">
                         <h2>Calendário</h2>

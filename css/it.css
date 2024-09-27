@@ -25,7 +25,7 @@ body {
 
 .intro-container {
     text-align: center;
-    background-color: #fff;
+    background-color: gray;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
