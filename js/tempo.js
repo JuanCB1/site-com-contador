@@ -1,5 +1,3 @@
-const { get } = require("express/lib/response");
-
 const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
 const decoder = new TextDecoder('utf-8');
 
@@ -15,6 +13,8 @@ let ration = 0;
 
 let timeset = false;
 let rationset = false;
+
+let lastSentQuery = "";
 
 //cores definidas no CSS
 const rosaclaro = getCssVariable('--Rosa-claro');
@@ -48,6 +48,11 @@ function showinfoedit(btn) {
     document.getElementById(`edit-${btn}-button`).style.display = 'block';
 }
 
+function encodeID(info)
+{
+    return (info.hours << 23) | (info.minutes << 17) | info.extra;
+}
+
 function decodeID(id) {
     const hours = (id >> 23) & 0x1F;       // Extrai as horas
     const minutes = (id >> 17) & 0x3F;     // Extrai os minutos
@@ -65,6 +70,27 @@ function FormatHour(input) {
     const minute = input.minutes.toString().padStart(2, '0');
 
     return `${hour}:${minute}`
+}
+
+function deconstructHour(timevalue)
+{
+    var time = timevalue.split(':');
+
+    return {
+        hours: parseInt(time[0]),
+        minutes: parseInt(time[1])
+    }
+}
+
+function endictateInfo(timevalue, extra)
+{
+    var time = deconstructHour(timevalue);
+
+    return {
+        hours: time.hours,
+        minutes: time.minutes,
+        extra: extra
+    }
 }
 
 // Initial Setup
@@ -94,6 +120,32 @@ function Setup(msg) {
     showinfoedit('time');
     showinfoedit('ration');
 }
+
+
+function send(query)
+{
+    if (query != lastSentQuery)
+    {
+        client.publish("ESP_COMMAND", query)
+        lastSentQuery = query;
+    }
+}
+
+
+function SetIfReady()
+{
+    if (rationset && timeset)
+    {
+        const ID1 = encodeID(endictateInfo(document.getElementById('morning-time').value, document.getElementById('morning-ration').value))
+        const ID2 = encodeID(endictateInfo(document.getElementById('afternoon-time').value, document.getElementById('afternoon-ration').value))
+        const ID3 = encodeID(endictateInfo(document.getElementById('evening-time').value, document.getElementById('evening-ration').value))
+
+        const query = "SETSCH " +  ID1 + " " + ID2 + " " + ID3;
+
+        send(query);
+    }
+}
+
 
 const Handler = function (topic, msg) {
     var msgstr = decoder.decode(msg);
@@ -143,6 +195,7 @@ document.getElementById('schedule-time-form').addEventListener('submit', functio
     showinfoedit('time')
 
     timeset = true
+    SetIfReady();
 });
 
 // Função para editar horários
@@ -162,7 +215,8 @@ document.getElementById('schedule-ration-form').addEventListener('submit', funct
     // Mostrar botão de editar e ocultar o formulário
     showinfoedit('ration')
 
-    timeset = true
+    rationset = true
+    SetIfReady();
 });
 
 // Função para editar ração
