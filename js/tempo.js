@@ -97,9 +97,25 @@ function endictateInfo(timevalue, extra)
 hideinfo('time');
 hideinfo('ration');
 
+
+function lastQueryInit(input)
+{
+    var query = "SETSCH"
+
+    input.forEach((element) => {
+        query += ` ${element}`
+    })
+
+    lastSentQuery = query;
+    console.log(query);
+}
+
+
 function Setup(msg) {
     var words = msg.split(' ').slice(1);
     var Times = [];
+
+    lastQueryInit(words);
 
     words.forEach(element => {
         console.log(element);
@@ -120,7 +136,6 @@ function Setup(msg) {
     showinfoedit('time');
     showinfoedit('ration');
 }
-
 
 function send(query)
 {
@@ -157,7 +172,7 @@ const Handler = function (topic, msg) {
         Setup(msgstr);
         client.off("message", Handler)
     }
-    else if (topic == 'ESP_DATA' && msgstr == "ESP_STARTUP") {
+    else if (topic == 'ESP_DATA' && (msgstr == "ESP_STARTUP" || msgstr == "NOSCHD")) {
         client.off("message", Handler)
         showinfosch('time');
         showinfosch('ration');
@@ -169,18 +184,6 @@ function request() {
     client.publish("ESP_COMMAND", "RETURNSCH");
 }
 
-/*function getEvents()
-{
-
-}*/
-
-function sendEvents()
-{
-    if (rationset && timeset)
-    {
-
-    }
-}
 
 // Função para salvar horários
 document.getElementById('schedule-time-form').addEventListener('submit', function (event) {
